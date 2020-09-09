@@ -1,73 +1,90 @@
-<<<<<<< HEAD
-# jianshu
-react项目：简书系统功能的实现
-=======
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 什么是虚拟DOM？
 
-## Available Scripts
+- 没有虚拟DOM
+1. state 数据
+2. 模板
+3. 数据 + 模板 集合，生成真实的DOM 来显示
+4. state 发生改变
+5. 数据 + 模板 结合 生成真实的DOM 替换原始的DOM
 
-In the project directory, you can run:
+缺陷：
+第一次生成了一个完整的DOM片段
+第二次生成了一个完整的DOM片段
+第二次生成的DOM替换第一次的DOM，非常耗性能
 
-### `yarn start`
+1. state 数据
+2. JSX 模板
+3. 数据 + 模板 结合 生成真实的DOM 来显示
+4. state 发生改变
+5. 数据 + 模板结合 生成真实的DOM 并不直接替换原始的DOM
+6. 新的DOM (DocumentFragment) 和原始的DOM 做比对，找差异
+7. 找出input框发生了变化
+8. 只用新的DOM中的input元素，替换掉老的DOM中的input元素
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+缺陷：
+性能的提升并不明显
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. state 数据
 
-### `yarn test`
+2. JSX 模板
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. 生成虚拟DOM(虚拟DOM就是一个JS对象，用它来描述真实的DOM)(损耗了性能)
 
-### `yarn build`
+4. 数据 + 模板 结合 用虚拟DOM的结构生成真实的DOM 来显示
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. state 发生变化
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+6. 数据+模板 生成新的虚拟DOM(极大的提升了性能)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+7. 比较原始虚拟DOM和新的虚拟DOM的区别(极大的提升了性能)
 
-### `yarn eject`
+8. 直接操作DOM 改变其中的内容
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+优点：
+1. 性能提升了
+2. 它使得跨端应用得以实现。react native
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+JSX -> createElement -> 虚拟DOM(JS对象) -> 真实的DOM
+JSX变为JS对象使用了createElement方法
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 虚拟DOM的diff算法
+虚拟DOM进行比对，比对的方式叫做diff算法
+Diff difference
+数据发生变化会进行比对，render props state就相当于setState。
+setState设置为异步的，为了提升底层的性能。
+同层虚拟DOM比对的方式，一层不一样，就不会进行比对，删除后面的节点。
+给虚拟DOM的节点取名字，根据key值进行比对。
+将key值设置为Index，会导致原始虚拟DOM以及新的虚拟DOM顺序不一致。导致key值不稳定。
+使用稳定的值做Key值。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- ref 用于获取页面上的DOM节点
+  不轻易使用ref，最好不要直接对DOM进行操作。
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## React生命周期函数
+- 生命周期函数是指在某一时刻组件会自动执行的函数。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+初始化 -> 挂载 -> 更新 -> 卸载
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+- Initialize:
+1. 当接收到props和state开始执行
 
-### Analyzing the Bundle Size
+- Mounting: 
+第一次挂载
+1. componentWillMount: 组件即将挂载到页面的时刻自动执行。
+2. componentDidMount: 组件被挂载到页面上自动执行
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- Updation: 
+props state发生变化执行。
+1. shouldComponentUpdate: 组件被更新之前，自动执行
+   要求返回布尔值类型。 true更新 false不更新
+2. componentWillUpdate: 组件被更新之前，他会自动执行，但是他在SCU之后执行。 SCU返回true执行，返回false不执行。
+3. componentDidUpdate: 组件更新完成之后，自动执行
 
-### Making a Progressive Web App
+4. componentWillReceiveProps: 当一个组件从父组件接收参数。 只要父组件的render函数被重新执行了，子组件的这个生命周期就会执行。
+如果这个组件第一次存在与父组件中，才会执行。
+如果这个组件之前已经存在于父组件中，才会执行。
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
->>>>>>> 54ad6d4... first-commit
+- Unmount:
+1. componentWillUnmount: 当这个组件即将被页面中剔除的时候，才会被执行。
