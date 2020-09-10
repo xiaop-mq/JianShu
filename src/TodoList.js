@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { getInputItemAction, getAddItemAction, getDeleteItemAction } from './store/actionCreators'
+import TodoListUI from './TodoListUI'
+import { getInputItemAction, getAddItemAction, getDeleteItemAction, getInitList } from './store/actionCreators'
 import store from './store'
 import 'antd/dist/antd.css';
-import { Input, Button, List } from 'antd'
  
 
 class TodoList extends Component {
@@ -12,26 +12,23 @@ class TodoList extends Component {
         this.handleStoreChange = this.handleStoreChange.bind(this)
         this.handleChangeItem = this.handleChangeItem.bind(this)
         this.handleBtnClick = this.handleBtnClick.bind(this)
+        this.handleDeleteItem = this.handleDeleteItem.bind(this)
         store.subscribe(this.handleStoreChange, this.handleBtnClick) // 发布订阅者模式
     }
     render() { 
         return ( 
-            <div style={{marginTop: '10px', marginLeft: '10px'}}>
-                <Input 
-                    value={this.state.inputValue} 
-                    placeholder="基本使用" 
-                    style={{width: '300px', marginRight:'10px'}}
-                    onChange={this.handleChangeItem}/>
-                <Button onClick={this.handleBtnClick} type="primary">提交</Button>
-                <List
-                    style={{width:'320px', marginTop: '10px'}}
-                    size="small"
-                    bordered
-                    dataSource={this.state.list}
-                    renderItem={(item, index) => <List.Item onClick={this.handleDeleteItem.bind(this, index)}>{item}</List.Item>}
-                    />
-            </div>
+            <TodoListUI 
+                list={this.state.list}
+                inputValue={this.state.inputValue}
+                handleChangeItem={this.handleChangeItem}
+                handleBtnClick={this.handleBtnClick}
+                handleDeleteItem={this.handleDeleteItem}
+            />
          );
+    }
+    componentDidMount(){
+        const action = getInitList()
+        store.dispatch(action)
     }
     handleChangeItem(e){
         const action = getInputItemAction(e.target.value);
