@@ -1,33 +1,51 @@
-import React, { Component } from 'react';
-import store from './store'
+import React from 'react';
 import { connect } from 'react-redux'
 import { Input, Button } from 'antd';
 
-class TodoList extends Component {
-    constructor(props){
-        super(props)
-        this.state = store.getState()
-        this.handleInputItem = this.handleInputItem.bind(this)
-        this.handleBtnClick = this.handleBtnClick.bind(this)
-    }
+
+const TodoList = {
     render() { 
+        const { inputValue, changeInputValue, handleBtnClick, list } = this.props
         return ( 
             <div>
                 <div>
-                    <Input value={this.props.inputValue} onChange={this.handleInputItem}/>
-                    <Button onClick={this.handleBtnClick}>提交</Button>
+                    <Input value={inputValue} onChange={changeInputValue}/>
+                    <Button onClick={handleBtnClick}>提交</Button>
                 </div>
                 <ul>
-                    <li>kiki</li>
+                    {
+                        list.map((item, index) => {
+                            return <li key={index}>{item}</li>
+                        })
+                    }
                 </ul>
             </div>
          );
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeInputValue(e) {
+            const action = {
+                type: 'change_input_value',
+                value: e.target.value
+            }
+            dispatch(action)
+        },
+        handleBtnClick() {
+            const action = {
+                type: 'add_item'
+            }
+            dispatch(action)
+        },
+    }
+}
 const mapStateToProps = (state) => {
     return {
-        inputValue: state.inputValue
+        inputValue: state.inputValue,
+        list: state.list
     }
 }
 // connect 让组件和store连接
-export default connect(mapStateToProps, null)(TodoList);
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
