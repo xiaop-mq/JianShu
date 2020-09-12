@@ -1,11 +1,12 @@
-import React from 'react';
-import TodoList from './TodoList';
-function App() {
-  return (
-    <div>
-      <TodoList />
-    </div>
-  );
-}
+import React, { Component } from 'react';
+import Header from './common/header'
 
+class App extends Component {
+  render() { 
+    return ( 
+      <Header />
+     );
+  }
+}
+ 
 export default App;
